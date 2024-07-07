@@ -6,7 +6,8 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: Constants.statusBarHeight,
     padding: 8,
-    backgroundColor: '#24292e'
+    backgroundColor: '#24292e',
+    flexDirection: 'row'
   }
 })
 
@@ -14,7 +15,10 @@ const AppBar = () => {
   return (
     <View style={styles.container}>
       <Pressable>
-        <AppBarTab name={'Repositories'}/>
+        <AppBarTab name={'Repositories'} route={'/'}/>
+      </Pressable>
+      <Pressable>
+        <AppBarTab name={'Sign In'} route={'/signin'}/>
       </Pressable>
     </View>
   )

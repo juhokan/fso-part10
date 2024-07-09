@@ -3,8 +3,11 @@ import { View, TextInput, Pressable, Text, StyleSheet } from 'react-native'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import theme from '../theme'
+import useSignIn from '../hooks/useSignIn'
 
 const SignIn = () => {
+  const [signIn] = useSignIn()
+
   const initialValues = {
     username: '',
     password: ''
@@ -19,8 +22,15 @@ const SignIn = () => {
       .required('Password is required')
   })
 
-  const onSubmit = (values) => {
-    console.log('Login credentials:', values)
+  const onSubmit = async (values) => {
+    const { username, password } = values
+    console.log('credentials: username:', username, ' password: ', password)
+    try {
+      const { data } = await signIn({ username, password })
+      console.log('Login successful:', data)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const formik = useFormik({

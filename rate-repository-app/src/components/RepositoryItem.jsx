@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const formatNumber = (number) => {
+export const formatNumber = (number) => {
   if (number >= 1000) {
     return (number / 1000).toFixed(1) + 'k'
   }
@@ -69,7 +69,7 @@ const formatNumber = (number) => {
 
 const RepositoryItem = ({ repository }) => {
   return (
-    <View style={styles.container}>
+    <View testID='repositoryItem' style={styles.container}>
       <View style={{flexDirection: 'row'}}>
         <Image 
           source={{ uri: repository.ownerAvatarUrl }} 

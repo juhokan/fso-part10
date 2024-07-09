@@ -1,45 +1,45 @@
-import React from 'react'
-import { FlatList, View, StyleSheet, Text } from 'react-native'
-import RepositoryItem from './RepositoryItem'
-import useRepositories from '../hooks/useRepositories'
+import React from 'react';
+import { FlatList, View, StyleSheet, Text } from 'react-native';
+import RepositoryItem from './RepositoryItem';
+import useRepositories from '../hooks/useRepositories';
 
 const styles = StyleSheet.create({
   separator: {
-    height: 10
-  }
-})
+    height: 10,
+  },
+});
 
-const ItemSeparator = () => <View style={styles.separator} />
+const ItemSeparator = () => <View style={styles.separator} />;
 
-const RepositoryList = () => {
-  const { repositories, loading, error } = useRepositories()
-
-  if (loading) {
-    return <Text>Loading...</Text>
-  }
-
-  if (error) {
-    return <Text>Error loading data</Text>
-  }
-
+export const RepositoryListContainer = ({ repositories }) => {
   const repositoryNodes = repositories
-    ? repositories.edges.map(edge => edge.node)
-    : []
+    ? repositories.edges.map((edge) => edge.node)
+    : [];
 
   return (
     <FlatList
       data={repositoryNodes}
       ItemSeparatorComponent={ItemSeparator}
       renderItem={({ item }) => {
-        return (
-          <RepositoryItem
-            repository={item}
-          />
-        )
+        return <RepositoryItem repository={item} />;
       }}
-      keyExtractor={item => item.id}
+      keyExtractor={(item) => item.id}
     />
-  )
-}
+  );
+};
 
-export default RepositoryList
+const RepositoryList = () => {
+  const { repositories, loading, error } = useRepositories();
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>Error loading data</Text>;
+  }
+
+  return <RepositoryListContainer repositories={repositories} />;
+};
+
+export default RepositoryList;

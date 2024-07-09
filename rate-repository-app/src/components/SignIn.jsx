@@ -4,9 +4,11 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import theme from '../theme'
 import useSignIn from '../hooks/useSignIn'
+import { useNavigate } from 'react-router-native'
 
 const SignIn = () => {
   const [signIn] = useSignIn()
+  const navigate = useNavigate()
 
   const initialValues = {
     username: '',
@@ -28,6 +30,7 @@ const SignIn = () => {
     try {
       const { data } = await signIn({ username, password })
       console.log('Login successful:', data)
+      navigate('/')
     } catch (e) {
       console.log(e)
     }

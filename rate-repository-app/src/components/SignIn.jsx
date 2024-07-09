@@ -1,46 +1,49 @@
-import React from 'react'
-import { View, TextInput, Pressable, Text, StyleSheet } from 'react-native'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import theme from '../theme'
-import useSignIn from '../hooks/useSignIn'
-import { useNavigate } from 'react-router-native'
+import React from 'react';
+import { View, TextInput, Pressable, Text, StyleSheet } from 'react-native';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import theme from '../theme';
+import useSignIn from '../hooks/useSignIn';
+import { useNavigate } from 'react-router-native';
 
-const SignIn = () => {
-  const [signIn] = useSignIn()
-  const navigate = useNavigate()
-
-  const initialValues = {
-    username: '',
-    password: ''
-  }
-
-  const validationSchema = Yup.object().shape({
-    username: Yup.string()
-      .min(4, 'Username must be at least 4 characters')
-      .required('Username is required'),
-    password: Yup.string()
-      .min(8, 'Password must be at least 8 characters')
-      .required('Password is required')
-  })
-
-  const onSubmit = async (values) => {
-    const { username, password } = values
-    console.log('credentials: username:', username, ' password: ', password)
-    try {
-      const { data } = await signIn({ username, password })
-      console.log('Login successful:', data)
-      navigate('/')
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  const formik = useFormik({
-    initialValues,
-    validationSchema,
-    onSubmit
-  })
+const SignInForm = ({ onSubmit, values, handleChange, handleBlur, errors, touched }) => {
+  const styles = StyleSheet.create({
+    container: {
+      flexDirection: 'column',
+      backgroundColor: 'white',
+      padding: 20,
+      margin: 4,
+      borderRadius: 4,
+    },
+    input: {
+      height: 40,
+      width: '100%',
+      borderWidth: 1,
+      borderColor: theme.colors.inputBorder,
+      marginBottom: 10,
+      padding: 10,
+      borderRadius: 4,
+    },
+    inputError: {
+      borderColor: 'red',
+    },
+    button: {
+      backgroundColor: theme.colors.primary,
+      padding: 10,
+      borderRadius: 4,
+      width: '100%',
+      alignItems: 'center',
+    },
+    buttonText: {
+      color: 'white',
+      fontSize: theme.fontSizes.subheading,
+      fontWeight: theme.fontWeights.bold,
+    },
+    error: {
+      color: 'red',
+      marginBottom: 8,
+    },
+  });
 
   return (
     <View style={styles.container}>
@@ -48,72 +51,88 @@ const SignIn = () => {
         placeholder='Username'
         style={[
           styles.input,
-          formik.touched.username && formik.errors.username ? styles.inputError : null
+          touched.username && errors.username ? styles.inputError : null,
         ]}
-        value={formik.values.username}
-        onChangeText={formik.handleChange('username')}
-        onBlur={formik.handleBlur('username')}
+        value={values.username}
+        onChangeText={handleChange('username')}
+        onBlur={handleBlur('username')}
       />
-      {formik.touched.username && formik.errors.username ? (
-        <Text style={styles.error}>{formik.errors.username}</Text>
+      {touched.username && errors.username ? (
+        <Text style={styles.error}>{errors.username}</Text>
       ) : null}
       <TextInput
         placeholder='Password'
         style={[
           styles.input,
-          formik.touched.password && formik.errors.password ? styles.inputError : null
+          touched.password && errors.password ? styles.inputError : null,
         ]}
-        value={formik.values.password}
-        onChangeText={formik.handleChange('password')}
-        onBlur={formik.handleBlur('password')}
+        value={values.password}
+        onChangeText={handleChange('password')}
+        onBlur={handleBlur('password')}
         secureTextEntry
       />
-      {formik.touched.password && formik.errors.password ? (
-        <Text style={styles.error}>{formik.errors.password}</Text>
+      {touched.password && errors.password ? (
+        <Text style={styles.error}>{errors.password}</Text>
       ) : null}
-      <Pressable onPress={formik.handleSubmit} style={styles.button}>
+      <Pressable onPress={onSubmit} style={styles.button}>
         <Text style={styles.buttonText}>Sign In</Text>
       </Pressable>
     </View>
-  )
-}
+  );
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    backgroundColor: 'white',
-    padding: 20,
-    margin: 4,
-    borderRadius: 4
-  },
-  input: {
-    height: 40,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: theme.colors.inputBorder,
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 4
-  },
-  inputError: {
-    borderColor: 'red'
-  },
-  button: {
-    backgroundColor: theme.colors.primary,
-    padding: 10,
-    borderRadius: 4,
-    width: '100%',
-    alignItems: 'center'
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: theme.fontSizes.subheading,
-    fontWeight: theme.fontWeights.bold
-  },
-  error: {
-    color: 'red',
-    marginBottom: 8
-  }
-})
+export const SignInContainer = ({ onSubmit }) => {
+  const initialValues = {
+    username: '',
+    password: '',
+  };
 
-export default SignIn
+  const validationSchema = Yup.object().shape({
+    username: Yup.string()
+      .min(4, 'Username must be at least 4 characters')
+      .required('Username is required'),
+    password: Yup.string()
+      .min(8, 'Password must be at least 8 characters')
+      .required('Password is required'),
+  });
+
+  return (
+    <Formik
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      validationSchema={validationSchema}
+    >
+      {({ handleSubmit, values, handleChange, handleBlur, errors, touched }) => (
+        <SignInForm
+          onSubmit={handleSubmit}
+          values={values}
+          handleChange={handleChange}
+          handleBlur={handleBlur}
+          errors={errors}
+          touched={touched}
+        />
+      )}
+    </Formik>
+  );
+};
+
+const SignIn = () => {
+  const [signIn] = useSignIn();
+  const navigate = useNavigate();
+
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+    console.log('credentials: username:', username, ' password: ', password);
+    try {
+      const { data } = await signIn({ username, password });
+      console.log('Login successful:', data);
+      navigate('/');
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  return <SignInContainer onSubmit={onSubmit} />;
+};
+
+export default SignIn;

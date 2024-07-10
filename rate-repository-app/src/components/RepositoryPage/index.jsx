@@ -5,6 +5,7 @@ import { useParams } from 'react-router-native'
 import RepositoryItem from '../RepositoryItem'
 import { openURL } from 'expo-linking'
 import theme from '../../theme'
+import ReviewList from './ReviewList'
 
 const RepositoryPage = () => {
   const { id } = useParams()
@@ -29,6 +30,7 @@ const RepositoryPage = () => {
       <Pressable onPress={() => openURL(data.repository.url)} style={styles.button}>
         <Text style={styles.buttonText}>Open in GitHub</Text>
       </Pressable>
+      <ReviewList reviews={data.repository.reviews.edges} /> 
     </View>
   )
 }
@@ -36,7 +38,8 @@ const RepositoryPage = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    maxHeight: '95%'
   },
   title: {
     fontSize: 20,

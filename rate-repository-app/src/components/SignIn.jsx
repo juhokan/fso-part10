@@ -1,10 +1,10 @@
-import React from 'react';
-import { View, TextInput, Pressable, Text, StyleSheet } from 'react-native';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import theme from '../theme';
-import useSignIn from '../hooks/useSignIn';
-import { useNavigate } from 'react-router-native';
+import React from 'react'
+import { View, TextInput, Pressable, Text, StyleSheet } from 'react-native'
+import { Formik } from 'formik'
+import * as Yup from 'yup'
+import theme from '../theme'
+import useSignIn from '../hooks/useSignIn'
+import { useNavigate } from 'react-router-native'
 
 const SignInForm = ({ onSubmit, values, handleChange, handleBlur, errors, touched }) => {
   const styles = StyleSheet.create({
@@ -13,7 +13,7 @@ const SignInForm = ({ onSubmit, values, handleChange, handleBlur, errors, touche
       backgroundColor: 'white',
       padding: 20,
       margin: 4,
-      borderRadius: 4,
+      borderRadius: 4
     },
     input: {
       height: 40,
@@ -22,28 +22,28 @@ const SignInForm = ({ onSubmit, values, handleChange, handleBlur, errors, touche
       borderColor: theme.colors.inputBorder,
       marginBottom: 10,
       padding: 10,
-      borderRadius: 4,
+      borderRadius: 4
     },
     inputError: {
-      borderColor: 'red',
+      borderColor: 'red'
     },
     button: {
       backgroundColor: theme.colors.primary,
       padding: 10,
       borderRadius: 4,
       width: '100%',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     buttonText: {
       color: 'white',
       fontSize: theme.fontSizes.subheading,
-      fontWeight: theme.fontWeights.bold,
+      fontWeight: theme.fontWeights.bold
     },
     error: {
       color: 'red',
-      marginBottom: 8,
-    },
-  });
+      marginBottom: 8
+    }
+  })
 
   return (
     <View style={styles.container}>
@@ -51,7 +51,7 @@ const SignInForm = ({ onSubmit, values, handleChange, handleBlur, errors, touche
         placeholder='Username'
         style={[
           styles.input,
-          touched.username && errors.username ? styles.inputError : null,
+          touched.username && errors.username ? styles.inputError : null
         ]}
         value={values.username}
         onChangeText={handleChange('username')}
@@ -64,7 +64,7 @@ const SignInForm = ({ onSubmit, values, handleChange, handleBlur, errors, touche
         placeholder='Password'
         style={[
           styles.input,
-          touched.password && errors.password ? styles.inputError : null,
+          touched.password && errors.password ? styles.inputError : null
         ]}
         value={values.password}
         onChangeText={handleChange('password')}
@@ -78,14 +78,14 @@ const SignInForm = ({ onSubmit, values, handleChange, handleBlur, errors, touche
         <Text style={styles.buttonText}>Sign In</Text>
       </Pressable>
     </View>
-  );
-};
+  )
+}
 
 export const SignInContainer = ({ onSubmit }) => {
   const initialValues = {
     username: '',
-    password: '',
-  };
+    password: ''
+  }
 
   const validationSchema = Yup.object().shape({
     username: Yup.string()
@@ -93,8 +93,8 @@ export const SignInContainer = ({ onSubmit }) => {
       .required('Username is required'),
     password: Yup.string()
       .min(8, 'Password must be at least 8 characters')
-      .required('Password is required'),
-  });
+      .required('Password is required')
+  })
 
   return (
     <Formik
@@ -113,26 +113,26 @@ export const SignInContainer = ({ onSubmit }) => {
         />
       )}
     </Formik>
-  );
-};
+  )
+}
 
 const SignIn = () => {
-  const [signIn] = useSignIn();
-  const navigate = useNavigate();
+  const [signIn] = useSignIn()
+  const navigate = useNavigate()
 
   const onSubmit = async (values) => {
-    const { username, password } = values;
-    console.log('credentials: username:', username, ' password: ', password);
+    const { username, password } = values
+    console.log('credentials: username:', username, ' password: ', password)
     try {
-      const { data } = await signIn({ username, password });
-      console.log('Login successful:', data);
-      navigate('/');
+      const { data } = await signIn({ username, password })
+      console.log('Login successful:', data)
+      navigate('/')
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
-  };
+  }
 
-  return <SignInContainer onSubmit={onSubmit} />;
-};
+  return <SignInContainer onSubmit={onSubmit} />
+}
 
-export default SignIn;
+export default SignIn

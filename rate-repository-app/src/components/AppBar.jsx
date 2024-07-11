@@ -46,6 +46,9 @@ const AppBar = () => {
               <AppBarTab name={'Sign In'} route={'/signin'}/>
             </Pressable>
           )}
+        <Pressable>
+          <AppBarTab name={'Sign Up'} route={'/signup'}/>
+        </Pressable>
       </ScrollView>
     </View>
   )

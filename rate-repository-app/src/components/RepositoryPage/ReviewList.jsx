@@ -89,7 +89,8 @@ const ReviewItem = ({ review }) => {
       <View style={styles.flexCol}>
         <Text style={styles.fullName}>{review.node.user.username}</Text>
         <Text style={styles.description}>{formattedDate}</Text>
-        <Text style={styles.textContainer}>{review.node.text}</Text>
+        {review.node.text && 
+        <Text style={styles.textContainer}>{review.node.text}</Text>}
       </View>
     </View>
   )

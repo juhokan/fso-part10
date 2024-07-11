@@ -33,6 +33,9 @@ const AppBar = () => {
         <Pressable>
           <AppBarTab name={'Repositories'} route={'/'}/>
         </Pressable>
+        <Pressable>
+          <AppBarTab name={'Create review'} route={'/create'}/>
+        </Pressable>
         {me 
           ? (
             <Pressable onPress={onSignOut} style={{padding: 8}}>

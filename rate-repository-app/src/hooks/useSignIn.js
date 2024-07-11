@@ -22,6 +22,8 @@ const useSignIn = () => {
     }
   }
 
+  console.log(result)
+
   return [signIn, result]
 }
 

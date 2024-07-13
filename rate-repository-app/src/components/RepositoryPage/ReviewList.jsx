@@ -1,7 +1,9 @@
 import React from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { Alert, Button, FlatList, StyleSheet, Text, View } from 'react-native'
 import theme from '../../theme'
 import { format } from 'date-fns'
+import { useNavigate } from 'react-router-native'
+import useDeleteReview from '../../hooks/useDeleteReview'
 
 const styles = StyleSheet.create({
   separator: {
@@ -73,13 +75,49 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     fontWeight: theme.fontWeights.normal,
     overflow: 'hidden'
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10
   }
 })
 
 const ItemSeparator = () => <View style={styles.separator} />
 
-const ReviewItem = ({ review }) => {
+const ReviewItem = ({ review, refetch }) => {
+  const [deleteReview] = useDeleteReview()
+  const navigate = useNavigate()
   const formattedDate = format(new Date(review.node.createdAt), 'dd.MM.yyyy')
+
+  console.log('review:' , review)
+
+  const handleViewRepository = () => {
+    navigate(`/${review.node.repositoryId}`)
+  }
+
+  const handleDeleteReview = () => {
+    Alert.alert(
+      'Delete review',
+      'Are you sure you want to delete this review?',
+      [
+        {
+          text: 'Cancel'
+        },
+        {
+          text: 'Delete',
+          onPress: async () => {
+            try {
+              await deleteReview({ id: review.node.id })
+              refetch()
+            } catch (err) {
+              console.log(err.message)
+            }
+          }
+        }
+      ]
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -91,17 +129,21 @@ const ReviewItem = ({ review }) => {
         <Text style={styles.description}>{formattedDate}</Text>
         {review.node.text && 
         <Text style={styles.textContainer}>{review.node.text}</Text>}
+        <View style={styles.buttonContainer}>
+          <Button title='View Repository' onPress={handleViewRepository} />
+          <Button title='Delete Review' onPress={handleDeleteReview} />
+        </View>
       </View>
     </View>
   )
 }
 
-const ReviewList = ({reviews}) => {
+const ReviewList = ({reviews, refetch}) => {
   return (
     <FlatList
       data={reviews}
       ItemSeparatorComponent={ItemSeparator}
-      renderItem={({ item }) => <ReviewItem review={item} />}
+      renderItem={({ item }) => <ReviewItem review={item} refetch={refetch}/>}
       keyExtractor={({ id }) => id}
     />
   )

@@ -15,9 +15,9 @@ const styles = StyleSheet.create({
 })
 
 const AppBar = () => {
-  const { me } = useMe()
+  const { me } = useMe(false)
 
-  console.log(me)
+  console.log('my account ', me)
 
   const authStorage = useAuthStorage()
   const apolloClient = useApolloClient()
@@ -36,6 +36,11 @@ const AppBar = () => {
         <Pressable>
           <AppBarTab name={'Create review'} route={'/create'}/>
         </Pressable>
+        {me && 
+          <Pressable>
+            <AppBarTab name={'My reviews'} route={'/myreviews'}/>
+          </Pressable>
+        }
         {me 
           ? (
             <Pressable onPress={onSignOut} style={{padding: 8}}>

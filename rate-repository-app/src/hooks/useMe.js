@@ -1,8 +1,9 @@
 import { useQuery } from '@apollo/client'
-import { ME } from '../graphql/queries'
+import { ME, MY_REVIEWS } from '../graphql/queries'
 
-const useMe = () => {
-  const { data, error, loading, refetch } = useQuery(ME)
+const useMe = (reviews = false) => {
+  const query = reviews ? MY_REVIEWS : ME
+  const { data, error, loading, refetch } = useQuery(query)
 
   const me = data ? data.me : null
 
